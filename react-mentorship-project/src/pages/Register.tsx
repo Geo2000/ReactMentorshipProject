@@ -1,3 +1,5 @@
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as Yup from "yup";
@@ -10,6 +12,9 @@ import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
 
 export default function Register() {
+  const [registrationStatus, setRegistrationStatus] = useState("");
+  const navigate = useNavigate();
+
   const validationSchema = Yup.object().shape({
     username: Yup.string()
       .required("Username is required")
@@ -32,8 +37,29 @@ export default function Register() {
     resolver: yupResolver(validationSchema),
   });
 
-  const onSubmit = (data: any) => {
-    console.log(data);
+  const onSubmit = async (data: any) => {
+    try {
+      const response = await fetch("http://localhost:8080/auth/signup", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          username: data.username,
+          password: data.password,
+        }),
+      });
+
+      if (response.ok) {
+        setRegistrationStatus("Registration successful!");
+        navigate("/login");
+      } else {
+        setRegistrationStatus("Registration failed.");
+      }
+    } catch (error) {
+      console.error("Error during registration:", error);
+      setRegistrationStatus("Error during registration.");
+    }
   };
 
   return (
@@ -106,6 +132,7 @@ export default function Register() {
             Sign Up
           </Button>
         </Box>
+        {registrationStatus && <Typography>{registrationStatus}</Typography>}
       </Box>
     </Container>
   );
