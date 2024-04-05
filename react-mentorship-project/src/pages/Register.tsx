@@ -52,7 +52,7 @@ export default function Register() {
 
       if (response.ok) {
         setRegistrationStatus("Registration successful!");
-        navigate("/login");
+        navigate("/");
       } else {
         setRegistrationStatus("Registration failed.");
       }
