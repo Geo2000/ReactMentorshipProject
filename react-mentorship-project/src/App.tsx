@@ -1,4 +1,4 @@
-import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
 
 import Profile from "./pages/Profile";
 import Register from "./pages/Register";
@@ -13,14 +13,8 @@ export default function App() {
     <>
       <BrowserRouter>
         <Routes>
-          <Route
-            index
-            element={token ? <Navigate to="/movies" replace /> : <Login />}
-          />
-          <Route
-            path="/register"
-            element={token ? <Navigate to="/movies" replace /> : <Register />}
-          />
+          <Route index element={<Login />} />
+          <Route path="/register" element={<Register />} />
           <Route path="/movies" element={<Movies token={token} />} />
           <Route path="/profile" element={<Profile token={token} />} />
           <Route path="*" element={<NoPage />} />
