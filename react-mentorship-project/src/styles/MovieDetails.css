@@ -1,0 +1,43 @@
+.movie-details-container {
+    margin-top: 20px;
+}
+
+.movie-details-card {
+    display: flex;
+    flex-direction: row;
+    background-color: #f5f5f5;
+    padding: 20px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.movie-details-poster {
+    width: 300px;
+    max-width: 300px;
+    height: auto;
+    border-radius: 5px;
+}
+
+.movie-details-content {
+    margin-left: 20px;
+    flex: 1;
+}
+
+.movie-title {
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+
+.movie-overview {
+    margin-top: 10px;
+    margin-bottom: 20px;
+}
+
+.movie-details-extra {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.movie-details-extra strong {
+    font-weight: bold;
+}

@@ -1,4 +1,6 @@
+import { useNavigate } from 'react-router-dom';
 import { Card, CardContent, CardMedia, Typography } from "@mui/material";
+
 import Movie from "../types/Movie";
 
 interface MovieCardProps {
@@ -17,13 +19,19 @@ const MovieCard: React.FC<MovieCardProps> = ({ movie }) => {
     poster_path,
   } = movie;
 
+  const navigate = useNavigate();
+
   const movie_title = name || title;
   const release_year = (first_air_date || release_date).slice(0, 4);
   const movie_description =
     overview.length > 100 ? overview.slice(0, 100) + "..." : overview;
 
+  const handleCardClick = (movie: Movie) => {
+    navigate(`/movies/${movie.id}`);
+  }
+
   return (
-    <Card sx={{ maxWidth: 260, margin: "20px" }}>
+    <Card sx={{ maxWidth: 260, margin: "20px" }} onClick={() => handleCardClick(movie)}>
       <CardMedia
         component="img"
         height="260"

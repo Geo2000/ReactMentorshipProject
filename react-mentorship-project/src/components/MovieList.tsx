@@ -2,18 +2,16 @@ import { useState, useEffect } from "react";
 
 import MovieCard from "./MovieCard";
 import Movie from "../types/Movie";
+import { API_KEY } from "../constants";
 
 const MovieList = () => {
   const [movies, setMovies] = useState<Movie[]>([]);
 
   useEffect(() => {
-    const apiKey = "974a00627013d94b001db965122991d5";
-
-    fetch(`https://api.themoviedb.org/3/trending/all/day?api_key=${apiKey}`)
+    fetch(`https://api.themoviedb.org/3/trending/all/day?api_key=${API_KEY}`)
       .then((response) => response.json())
       .then((data) => {
         setMovies(data.results);
-        console.log(data);
       })
       .catch((error) => console.error("Error fetching movies: ", error));
   }, []);

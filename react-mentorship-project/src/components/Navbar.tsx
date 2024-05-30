@@ -1,4 +1,4 @@
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import {
   AppBar,
   Toolbar,
@@ -11,15 +11,8 @@ import {
 
 import logo from "../assets/logo-transparent.png";
 
-const Navbar = () => {
-  const navigate = useNavigate();
-
+const Navbar = ({handleLogout}:any) => {
   const username = localStorage.getItem("username");
-
-  const handleLogout = () => {
-    localStorage.clear();
-    navigate("/");
-  };
 
   return (
     <AppBar

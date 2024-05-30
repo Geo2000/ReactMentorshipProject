@@ -14,7 +14,7 @@ import Button from "@mui/material/Button";
 import LoginImage from "../assets/img/brba.jpg";
 import { setUsername, setToken } from "../redux_store/reducers";
 
-export default function Login() {
+export default function Login({setTokenProp}: any) {
   const [username, setUsernameState] = useState("");
   const [password, setPassword] = useState("");
   const [loginStatus, setLoginStatus] = useState("");
@@ -42,6 +42,7 @@ export default function Login() {
         dispatch(setToken(data.token));
 
         setLoginStatus("Login successful!");
+        setTokenProp(data.token);
         navigate("/movies");
       } else {
         setLoginStatus("Login failed. Please check your credentials.");
