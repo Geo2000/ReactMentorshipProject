@@ -1,7 +1,9 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
-import { useDispatch } from "react-redux";
+import { useDispatch } from 'react-redux';
+import { setUsernameData, fetchProfilePic } from '../redux_store/slices/userSlice';
+import { AppDispatch } from '../redux_store/store';
 
 import Grid from "@mui/material/Grid";
 import CssBaseline from "@mui/material/CssBaseline";
@@ -12,7 +14,8 @@ import Paper from "@mui/material/Paper";
 import Button from "@mui/material/Button";
 
 import LoginImage from "../assets/img/brba.jpg";
-import { setUsername, setToken } from "../redux_store/reducers";
+import { fetchFavourites, fetchWatchlist } from "../redux_store/slices/movieSlice";
+// import { setUsername, setToken } from "../redux_store/reducers";
 
 export default function Login({setTokenProp}: any) {
   const [username, setUsernameState] = useState("");
@@ -21,7 +24,7 @@ export default function Login({setTokenProp}: any) {
 
   const navigate = useNavigate();
   const { handleSubmit } = useForm();
-  const dispatch = useDispatch();
+  const dispatch: AppDispatch = useDispatch();
 
   const onLogin = async () => {
     try {
@@ -38,8 +41,10 @@ export default function Login({setTokenProp}: any) {
         localStorage.setItem("token", data.token);
         localStorage.setItem("username", data.user.username);
 
-        dispatch(setUsername(data.user.username));
-        dispatch(setToken(data.token));
+        dispatch(setUsernameData({ username: data.user.username }));
+        dispatch(fetchProfilePic());
+        dispatch(fetchWatchlist());
+        dispatch(fetchFavourites());
 
         setLoginStatus("Login successful!");
         setTokenProp(data.token);

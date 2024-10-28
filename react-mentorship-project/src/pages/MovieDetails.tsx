@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
 import {
   Card,
   CardContent,
@@ -8,12 +9,15 @@ import {
   CircularProgress,
   Container,
   Box,
+  Button,
 } from "@mui/material";
 
 import Navbar from "../components/Navbar";
 import background from "../assets/img/background.avif";
 import "../styles/MovieDetails.css";
 import { API_KEY } from "../constants";
+import { RootState } from '../redux_store/store';
+import { addMovieToFavourites, addMovieToWatchlist } from "../redux_store/slices/movieSlice";
 
 export default function MovieDetials() {
   const { movieId } = useParams<{ movieId: string }>();
@@ -22,14 +26,24 @@ export default function MovieDetials() {
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(true);
 
+  const dispatch = useDispatch();
+  const watchlist = useSelector((state: RootState) => state.movies.watchlist);
+  const favourites = useSelector((state: RootState) => state.movies.favourites);
+
+  console.log(watchlist, favourites, movie)
+
+  const isMovieInWatchlist = watchlist.some((m) => m.id === movie.id);
+  const isMovieInFavourites = favourites.some((m) => m.id === movie.id);
+
+
   useEffect(() => {
+    console.log(movieId, 'movieId')
     const fetchMovieDetails = async () => {
       try {
         const response = await fetch(
           `https://api.themoviedb.org/3/movie/${movieId}?api_key=${API_KEY}`
         );
         const data = await response.json();
-        // console.log(data, "data", response);
         if (!response.ok) {
           setError(data.status_message);
         } else {
@@ -62,6 +76,46 @@ export default function MovieDetials() {
 
     fetchMovieCast();
   }, [movieId]);
+
+  const handleAddToWatchlist = () => {
+    if (!isMovieInWatchlist) {
+      dispatch(addMovieToWatchlist(movie));
+      const options = {
+        method: 'POST',
+        headers: {
+          accept: 'application/json',
+          'content-type': 'application/json',
+          Authorization: 'Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiI5NzRhMDA2MjcwMTNkOTRiMDAxZGI5NjUxMjI5OTFkNSIsIm5iZiI6MTcyMjgwNTg5MC4wNjY5OTgsInN1YiI6IjY1ZmQ3YjdjN2Y2YzhkMDE3YzZmMGZjOSIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.BIgmgipfgJFlABU5B1xjp3T1RPxAcSLL_l72sS4MuiE'
+        },
+        body: JSON.stringify({
+          media_type: 'movie',
+          media_id: movie.id,
+          watchlist: true,
+        }),
+      };
+      fetch(`https://api.themoviedb.org/3/account/21128692/watchlist?api_key=${API_KEY}`, options);
+    }
+  };
+
+  const handleAddToFavourites = () => {
+    if (!isMovieInFavourites) {
+      dispatch(addMovieToFavourites(movie));
+      const options = {
+        method: 'POST',
+        headers: {
+          accept: 'application/json',
+          'content-type': 'application/json',
+          Authorization: 'Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiI5NzRhMDA2MjcwMTNkOTRiMDAxZGI5NjUxMjI5OTFkNSIsIm5iZiI6MTcyMjgwNTg5MC4wNjY5OTgsInN1YiI6IjY1ZmQ3YjdjN2Y2YzhkMDE3YzZmMGZjOSIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.BIgmgipfgJFlABU5B1xjp3T1RPxAcSLL_l72sS4MuiE'
+        },
+        body: JSON.stringify({
+          media_type: 'movie',
+          media_id: movie.id,
+          favorite: true,
+        }),
+      };
+      fetch(`https://api.themoviedb.org/3/account/21128692/favorite?api_key=${API_KEY}`, options);
+    }
+  };
 
   if (loading) {
     return <CircularProgress />;
@@ -137,6 +191,12 @@ export default function MovieDetials() {
                         )
                         .join(", ")}
                   </Typography>
+                  <Button onClick={handleAddToWatchlist} disabled={isMovieInWatchlist}>
+                    {isMovieInWatchlist ? 'In Watchlist' : 'Add to Watchlist'}
+                  </Button>
+                  <Button onClick={handleAddToFavourites} disabled={isMovieInFavourites}>
+                    {isMovieInFavourites ? 'In Favourites' : 'Add to Favourites'}
+                  </Button>
                 </Box>
               </CardContent>
             </>

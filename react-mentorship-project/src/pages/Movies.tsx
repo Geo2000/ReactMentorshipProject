@@ -9,7 +9,8 @@ export default function Movies({ handleLogout }: any) {
         style={{
           backgroundImage: `url(${background})`,
           backgroundSize: "cover",
-          height: "100vh",
+          height: "100%",
+          minHeight: '100vh'
         }}
       >
         <Navbar handleLogout={handleLogout} />

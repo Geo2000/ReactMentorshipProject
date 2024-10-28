@@ -6,7 +6,7 @@ interface Movie {
   vote_average: number;
   first_air_date: string;
   release_date: string;
-  genre: string;
+  genre_ids: [];
   poster_path: string;
 }
 
